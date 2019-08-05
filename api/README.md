@@ -1,12 +1,14 @@
 ## Overview
 
-Runs
+A node (express) API server that downloads and transforms a Google Spreadsheet, uploading the resulting JSON documents to S3.
 
 ## Installation (Digital Ocean + Docker)
 
-The easiest way to deploy the API is using docker on a cloud provider such as digitalocean. In this example, We'll create a new droplet called sheeyat-api then build and run the API server on it.
+The easiest way to deploy the API server is using docker on a cloud provider such as digitalocean. In this example, we'll create a new droplet called sheeyat-api then build and run the API server on it. Make sure you have docker installed locally before beginning the installation and your working directory is the "api" folder where this README is found.
 
 **Create the docker host droplet**
+
+Uses [docker machine](https://docs.docker.com/machine/) to provision a docker host on digitalocean.
 
 `docker-machine create --driver digitalocean --digitalocean-access-token <ACCESS TOKEN> sheeyat-api`
 
@@ -26,9 +28,13 @@ This process takes a few minutes while the new droplet downloads the base image,
 
 `mdkir secrets`
 
-Follow the instructions below to create a Google API Service Account and copy the json creds into a file called `secrets/gs.json`
+**Creating a Google Service Account**
 
-Create a file called `secrets/vars` with the following contents. This file will be added to the docker container's ENV.
+Follow [these instructions](https://support.google.com/a/answer/7378726?hl=en) to create a service account, ensuring that you choose "JSON" as the key type. Select "Project" > "Viewer" as the Role.
+
+Move the json file into a file called `secrets/gs.json`
+
+Create a new file called `secrets/vars` with the following contents. This file will be added to the docker container's ENV.
 
 ```
 AWS_ACCESS_KEY_ID=<access key id>
@@ -69,5 +75,3 @@ sheeyat-api requires a few local system dependencies before it will work:
 `pip install sqlitebiter[gs]`
 
 Once your dependencies are installed, just `npm install` and `npm run build` to get started
-
-## Creating a Google Service Account

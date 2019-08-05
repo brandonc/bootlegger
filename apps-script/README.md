@@ -18,6 +18,10 @@ The <id> can be found in the spreadsheet URL of your copy: https://docs.google.c
 
 Once bound, the spreadsheet should contain a menu item under Add-ons called "Publish via Sheeyat" which contains two actions: "Configure" and "Publish to Web"
 
+#### Security
+
+In order for your published spreadsheets to be readable by the backend, they must be _shared with_ the service account you set up during the installation of the api server. This is accomplished by clicking the "Share" button and typing the email address of the service account.
+
 #### Configuration
 
-Open the "Configure" action and type in the host URL for the backend as well as the secret you established during setup.
+Open the `Add-Ons > Publish via Sheeyat > Configure` action and type in the host URL for the backend as well as the secret you established during setup.
