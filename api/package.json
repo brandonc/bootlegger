@@ -1,0 +1,42 @@
+{
+  "name": "sheeyat-api",
+  "version": "1.0.0",
+  "description": "A backend API for transforming a Google Spreadsheet into JSON and storing the results in S3",
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "predeploy": "docker build -f Dockerfile . -t sheeyat:dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brandonc/sheeyat.git"
+  },
+  "author": "Brandon Croft",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brandonc/sheeyat/issues"
+  },
+  "homepage": "https://github.com/brandonc/sheeyat#readme",
+  "dependencies": {
+    "aws-sdk": "^2.503.0",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "express-request-id": "^1.4.1",
+    "sanitize-filename": "^1.6.2",
+    "tmp": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
+    "@types/body-parser": "^1.17.0",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^4.17.0",
+    "@types/express-request-id": "^1.4.0",
+    "@types/sanitize-filename": "^1.1.28",
+    "@types/tmp": "^0.1.0",
+    "rollup": "^1.18.0",
+    "rollup-plugin-typescript": "^1.0.1",
+    "rollup-plugin-uglify": "^6.0.2",
+    "tslib": "^1.10.0",
+    "typescript": "^3.5.3"
+  }
+}

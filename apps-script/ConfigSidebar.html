@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <link
+      rel="stylesheet"
+      href="https://ssl.gstatic.com/docs/script/css/add-ons1.css"
+    />
+    <style>
+      .branding-below {
+        bottom: 56px;
+        top: 0;
+      }
+    </style>
+    <!-- The CSS package above applies Google styling to buttons and other elements. -->
+  </head>
+  <body>
+    <div class="sidebar branding-below">
+      <form>
+        <div id="loading" class="block">
+          <p>Loading...</p>
+        </div>
+        <div id="configForm" style="display: none;">
+          <div class="block">
+            <p>Enter Sheeyat API host details. Please see the README for more information.</p>
+          </div>
+          <div class="block form-group">
+            <label for="apiHost">API Host</label>
+            <input type="text" id="apiHost" />
+          </div>
+          <div class="block form-group">
+            <label for="apiSecret">API Secret Token</label>
+            <input type="text" id="apiSecret" />
+          </div>
+          <div class="block">
+            <button type="button" class="action" id="saveBtn">
+              Save
+            </button>
+          </div>
+        </div>
+        <div id="done" class="block" style="display: none;">
+          <p>Configuration saved successfully.</h2>
+        </div>
+      </form>
+    </div>
+    <div class="sidebar bottom">
+      <span class="gray">
+        <a href="https://github.com/brandonc/sheeyat">Powered by Sheeyat</a>
+      </span>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+      $(function() {
+        google.script.run.withSuccessHandler(configLoaded).getConfig();
+
+        $("#saveBtn").click(function(e) {
+          e.preventDefault();
+          $("#saveBtn").attr("disabled", true);
+
+          $("#loading").show();
+          google.script.run
+            .withSuccessHandler(configSaved)
+            .saveConfig($("#apiHost").val(), $("#apiSecret").val());
+        });
+      });
+
+      function configLoaded(config) {
+        $("#apiHost").val(config.apiHost);
+        $("#apiSecret").val(config.apiSecret);
+
+        $("#configForm").show();
+        $("#loading").hide();
+      }
+
+      function configSaved() {
+        $("#done").show();
+        $("#loading").hide();
+        $("#configForm").hide();
+      }
+    </script>
+  </body>
+</html>

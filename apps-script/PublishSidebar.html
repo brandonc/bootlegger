@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <link
+      rel="stylesheet"
+      href="https://ssl.gstatic.com/docs/script/css/add-ons1.css"
+    />
+    <style>
+      .branding-below {
+        bottom: 56px;
+        top: 0;
+      }
+    </style>
+    <!-- The CSS package above applies Google styling to buttons and other elements. -->
+  </head>
+  <body>
+    <div class="sidebar branding-below">
+      <form>
+        <div class="block">
+          <div class="block form-group">
+            <label for="name">Spreadsheet</label>
+            <select name="name" id="name">
+              <option value="">Loading...</option>
+            </select>
+          </div>
+          <div class="block form-group">
+            <label for="environment">Environment</label>
+            <select name="environment" id="environment">
+              <option value="production">Production</option>
+            </select>
+          </div>
+          <div class="block">
+            <button type="button" class="action" id="publishBtn">
+              Publish Now
+            </button>
+          </div>
+        </div>
+        <div class="block" id="resultsContainer" style="display: none;">
+          <p id="resultsStatus"></p>
+        </div>
+      </form>
+      <div id="error" class="block" style="display: none;"></div>
+    </div>
+    <div class="sidebar bottom">
+      <span class="gray">
+        <a href="https://github.com/brandonc/sheeyat">Powered by Sheeyat</a>
+      </span>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+      $(function() {
+        $("#publishBtn").click(function(e) {
+          e.preventDefault();
+
+          $("#publishBtn").attr("disabled", true);
+          $("#resultsStatus").html("Publishing... This may take a moment.");
+          $("#resultsContainer").show();
+
+          google.script.run
+            .withSuccessHandler(showResult)
+            .withFailureHandler(failedToLoad)
+            .publishAsJson($("#name").val(), $("#environment").val());
+        });
+
+        google.script.run
+          .withSuccessHandler(addOptions)
+          .withFailureHandler(failedToLoad)
+          .listSpreadsheets();
+      });
+
+      function failedToLoad(error) {
+        $("form").hide();
+        $("#error")
+          .show()
+          .append(error.message);
+      }
+
+      function addOptions(names) {
+        $("#name").empty();
+        for (var i = 0; i < names.length; i++) {
+          const opt = document.createElement("option");
+          opt.setAttribute("value", names[i]);
+          opt.append(names[i]);
+          $("#name").append(opt);
+        }
+      }
+
+      function showResult(result) {
+        $("#publishBtn").removeAttr("disabled");
+        var list = $("#results");
+        list.empty();
+
+        $("#resultsStatus").html(
+          `Done! (The manifest is called ${result.manifest})`
+        );
+      }
+    </script>
+  </body>
+</html>
