@@ -1,4 +1,8 @@
-# Overview
+<center><img style="width: 180px;" src="https://brandoncroftcom.sfo2.cdn.digitaloceanspaces.com/sheeeeeit.jpg" /><br/>Sheeyat is a build server and Google Sheets apps-script the transforms a spreadsheet into JSON and uploads it to the cloud</center>
+
+---
+
+## Overview
 
 Sheeyat is a Google Spreadsheets toolchain that can transform a Google Spreadsheet into a set of JSON file(s) and upload them to S3-compatible cloud storage. It is composed of two parts:
 
