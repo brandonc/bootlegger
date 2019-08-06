@@ -1,4 +1,6 @@
-<center><h1>bootlegger</h1><div style="margin: 0 auto;"><img src="https://brandoncroftcom.sfo2.cdn.digitaloceanspaces.com/SS_Banshee.jpg" /><br/>bootlegger is a build server and Google Sheets integration the transforms a spreadsheet into JSON and uploads it to the ☁️</div></center>
+<div style="display: flex; justify-content: center;">
+  <div style="width: 350px; margin: 0 auto; text-align: center;"><h1>bootlegger</h1><img src="https://brandoncroftcom.sfo2.cdn.digitaloceanspaces.com/SS_Banshee.jpg" /><br/>bootlegger is a build server and Google Sheets integration the transforms a spreadsheet into JSON and uploads it to the ☁️</div>
+</div>
 
 ---
 
