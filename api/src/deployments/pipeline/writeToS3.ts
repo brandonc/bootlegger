@@ -69,7 +69,7 @@ function writeToS3(context: PipelineContext) {
 
   const innerPromises = (context.output.jsonFilesCompressed || []).map(
     jsonFile => {
-      const key = `sheeyat-${context.id}/${path
+      const key = `bootlegger-${context.id}/${path
         .basename(jsonFile)
         .replace(/\.gz$/, "")}`;
 

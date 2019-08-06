@@ -1,21 +1,21 @@
 {
-  "name": "sheeyat-api",
+  "name": "bootlegger-api",
   "version": "1.0.0",
   "description": "A backend API for transforming a Google Spreadsheet into JSON and storing the results in S3",
   "scripts": {
     "build": "rollup -c rollup.config.js",
-    "predeploy": "docker build -f Dockerfile . -t sheeyat:dev"
+    "predeploy": "docker build -f Dockerfile . -t bootlegger:dev"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brandonc/sheeyat.git"
+    "url": "git+https://github.com/brandonc/bootlegger.git"
   },
   "author": "Brandon Croft",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brandonc/sheeyat/issues"
+    "url": "https://github.com/brandonc/bootlegger/issues"
   },
-  "homepage": "https://github.com/brandonc/sheeyat#readme",
+  "homepage": "https://github.com/brandonc/bootlegger#readme",
   "dependencies": {
     "aws-sdk": "^2.503.0",
     "body-parser": "^1.19.0",

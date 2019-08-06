@@ -44,7 +44,7 @@ async function pipeline(requestId: string, deployment: DeploymentRequest) {
     request: deployment,
     output: {
       manifestFilename: sanitizeFilename(
-        `sheeyat-manifest-${deployment.environment}-${path.basename(
+        `bootlegger-manifest-${deployment.environment}-${path.basename(
           deployment.spreadsheetName
         )}.json`
       ),

@@ -26,7 +26,7 @@ function checkConfig() {
   const props = PropertiesService.getUserProperties();
   if (props.getProperty("apiHost") === "") {
     throw new Error(
-      "No configuration detected. Go to <pre>Publish via Sheeyat > Configure</pre> before continuing."
+      "No configuration detected. Go to <pre>Publish via Bootlegger > Configure</pre> before continuing."
     );
   }
 }
