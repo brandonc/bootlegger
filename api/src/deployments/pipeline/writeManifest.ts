@@ -1,21 +1,21 @@
 import fs from "fs";
 import tmp from "tmp";
 
+import { IPipelineContext } from "./";
 import { writeFileToS3 } from "./writeToS3";
-import { PipelineContext } from "./";
 
-function writeManifest(context: PipelineContext) {
+function writeManifest(context: IPipelineContext) {
   const manifestPath = tmp.tmpNameSync({
+    postfix: ".json",
     prefix: "manifest-",
-    postfix: ".json"
   });
 
   fs.writeFileSync(manifestPath, JSON.stringify(context.output.manifest), {
-    encoding: "utf8"
+    encoding: "utf8",
   });
 
   return writeFileToS3(`${manifestPath}`, context.output.manifestFilename, {
-    ContentType: "application/json"
+    ContentType: "application/json",
   });
 }
 

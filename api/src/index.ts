@@ -1,16 +1,17 @@
 import dotenv from "dotenv";
+import path from "path";
 
 // Load secrets environment variables
 dotenv.config({ path: path.resolve(__dirname, "secrets", "vars") });
 
-import path from "path";
-import express, { Response } from "express";
 import bodyParser from "body-parser";
+import express, { Response } from "express";
 import addRequestId from "express-request-id";
 
 import deploymentsRoutes from "./deployments/routes";
+import logger from "./logger";
 
-const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const app = express();
 
 app.use(addRequestId());
@@ -24,5 +25,5 @@ app.get("/health", (_, res: Response) => {
 app.use("/deployments", deploymentsRoutes);
 
 app.listen(PORT, () => {
-  console.log("Listening on port " + PORT);
+  logger.info("Listening on port " + PORT);
 });

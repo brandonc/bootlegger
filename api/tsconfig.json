@@ -18,6 +18,7 @@
     "esModuleInterop": true,
     "outDir": "dist",
     "skipLibCheck": true,
-    "lib": ["esnext", "esnext.asynciterable"]
+    "lib": ["esnext", "esnext.asynciterable"],
+    "importHelpers": true
   }
 }

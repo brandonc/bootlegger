@@ -2,15 +2,16 @@ import fs from "fs";
 import path from "path";
 import sanitizeFilename from "sanitize-filename";
 
-import DeploymentRequest from "../types/DeploymentRequest";
+import IDeploymentRequest from "../types/DeploymentRequest";
 
+import logger from "../../logger";
+import compressJson from "./compressJson";
 import sheetToSqlite from "./sheetToSqlite";
 import sqliteToJsonTransform from "./sqliteToJsonTransform";
-import compressJson from "./compressJson";
-import writeToS3 from "./writeToS3";
 import writeManifest from "./writeManifest";
+import writeToS3 from "./writeToS3";
 
-interface PipelineResult {
+interface IPipelineResult {
   dbPath?: string;
   jsonFiles?: string[];
   jsonFilesCompressed?: string[];
@@ -21,13 +22,13 @@ interface PipelineResult {
   };
 }
 
-interface PipelineContext {
+interface IPipelineContext {
   id: string;
-  request: DeploymentRequest;
-  output: PipelineResult;
+  request: IDeploymentRequest;
+  output: IPipelineResult;
 }
 
-type PipelineMethod = (context: PipelineContext) => Promise<string>;
+type PipelineMethod = (context: IPipelineContext) => Promise<string>;
 
 // These return promises with log messages and will be executed in order
 const PIPELINE: PipelineMethod[] = [
@@ -35,48 +36,52 @@ const PIPELINE: PipelineMethod[] = [
   sqliteToJsonTransform,
   compressJson,
   writeToS3,
-  writeManifest
+  writeManifest,
 ];
 
-async function pipeline(requestId: string, deployment: DeploymentRequest) {
-  const context: PipelineContext = {
+async function pipeline(requestId: string, deployment: IDeploymentRequest) {
+  const context: IPipelineContext = {
     id: requestId,
-    request: deployment,
     output: {
+      manifest: {},
       manifestFilename: sanitizeFilename(
         `bootlegger-manifest-${deployment.environment}-${path.basename(
-          deployment.spreadsheetName
-        )}.json`
+          deployment.spreadsheetName,
+        )}.json`,
       ),
-      manifest: {}
-    }
+    },
+    request: deployment,
   };
 
   try {
-    console.log(
-      `[${requestId}] Beginning pipeline for ${deployment.spreadsheetName} (${
-        deployment.environment
-      })...`
+    logger.info(
+      `[${requestId}] Beginning pipeline for ${deployment.spreadsheetName} (${deployment.environment})...`,
     );
     for (const item of PIPELINE) {
-      console.log(`[${requestId}] ${await item(context)}`);
+      logger.info(`[${requestId}] ${await item(context)}`);
     }
   } catch (e) {
-    console.log(
-      `[${requestId}] An error occurred (500 will be returned): ${e}`
+    logger.error(
+      `[${requestId}] An error occurred (500 will be returned): ${e}`,
     );
     throw e;
   } finally {
     const filesToCleanup = [
       context.output.dbPath,
       ...(context.output.jsonFiles || []),
-      ...(context.output.jsonFilesCompressed || [])
+      ...(context.output.jsonFilesCompressed || []),
     ];
 
-    filesToCleanup.forEach(item => item && fs.unlink(item, () => {}));
+    filesToCleanup.forEach(
+      item =>
+        item &&
+        fs.unlink(item, () => {
+          // No op
+        }),
+    );
   }
 
   return context.output;
 }
 
-export { pipeline as default, PipelineContext, PipelineResult };
+export { pipeline as default, IPipelineContext, IPipelineResult };

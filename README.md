@@ -80,11 +80,11 @@ Follow [these instructions](https://support.google.com/a/answer/7378726?hl=en) t
 
 **Create the required secrets locally and copy them to your server**
 
-`mdkir secrets`
+`npm run generatesecret`
 
 Move the json file created with the service account to the file `secrets/gs.json`
 
-Create a new file called `secrets/vars` with the following contents. This file will be added to the docker container's ENV.
+Open the new file called `secrets/vars` and add the following contents. This file will be added to the docker container's ENV.
 
 ```
 AWS_ACCESS_KEY_ID=<access key id>
@@ -124,4 +124,4 @@ bootlegger-api requires a few local system dependencies before it will work:
 
 `pip install sqlitebiter[gs]`
 
-Once your dependencies are installed, just `npm install` and `npm run build` to get started
+Once your dependencies are installed, just `npm install` and `npm start` to get started

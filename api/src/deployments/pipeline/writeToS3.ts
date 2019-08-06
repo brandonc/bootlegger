@@ -1,14 +1,14 @@
-import path from "path";
 import aws from "aws-sdk";
 import fs from "fs";
+import path from "path";
 
-import { PipelineContext } from "./";
+import { IPipelineContext } from "./";
 
 let s3: null | aws.S3 = null;
 
 function configure() {
   if (s3) {
-    return s3;
+    return;
   }
 
   if (
@@ -17,38 +17,41 @@ function configure() {
     !process.env.AWS_SECRET_ACCESS_KEY
   ) {
     throw Error(
-      "Cannot start: AWS config missing. See README Installation for details"
+      "Cannot start: AWS config missing. See README Installation for details",
     );
   }
 
   const s3Config = {
-    endpoint: String(process.env.S3_ENDPOINT),
     accessKeyId: String(process.env.AWS_ACCESS_KEY_ID),
-    secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY)
+    endpoint: String(process.env.S3_ENDPOINT),
+    secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY),
   };
 
   s3 = new aws.S3(s3Config);
-  return s3;
 }
 
 function writeFileToS3(
   filePath: string,
   key: string,
-  addlPutParams?: object | undefined
+  addlPutParams?: object | undefined,
 ) {
   const fileStream = fs.createReadStream(filePath);
 
-  const s3 = configure();
+  configure();
 
   const putParams = {
+    ACL: "public-read",
+    Body: fileStream,
     Bucket: String(process.env.S3_BUCKET_NAME),
     Key: key,
-    Body: fileStream,
-    ACL: "public-read",
-    ...addlPutParams
+    ...addlPutParams,
   };
 
   return new Promise<string>((resolve, reject) => {
+    if (s3 === null) {
+      throw Error("AWS not configured");
+    }
+
     s3.putObject(
       putParams,
       (err: aws.AWSError, data: aws.S3.PutObjectOutput) => {
@@ -57,12 +60,12 @@ function writeFileToS3(
         } else {
           resolve(`Data uploaded successfully: ${data.ETag}`);
         }
-      }
+      },
     );
   });
 }
 
-function writeToS3(context: PipelineContext) {
+function writeToS3(context: IPipelineContext) {
   if (!context.output.jsonFiles || context.output.jsonFiles.length === 0) {
     return Promise.reject("No files to upload");
   }
@@ -76,7 +79,7 @@ function writeToS3(context: PipelineContext) {
       context.output.manifest.json = key;
 
       return writeFileToS3(jsonFile, key, context.output.putParams);
-    }
+    },
   );
 
   return new Promise<string>((resolve, reject) => {

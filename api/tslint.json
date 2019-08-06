@@ -1,0 +1,9 @@
+{
+  "extends": ["tslint:latest", "tslint-react", "tslint-config-prettier"],
+  "linterOptions": {
+    "exclude": ["node_modules/**/*.ts"]
+  },
+  "compilerOptions": {
+    "plugins": [{ "name": "typescript-tslint-plugin" }]
+  }
+}

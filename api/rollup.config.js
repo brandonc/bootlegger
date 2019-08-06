@@ -6,19 +6,20 @@ export default {
   plugins: [typescript(), uglify()],
   output: {
     file: "dist/index.js",
-    format: "cjs"
+    format: "cjs",
   },
   external: [
-    "express-winston",
-    "express",
+    "aws-sdk",
     "body-parser",
+    "child_process",
+    "dotenv",
+    "express",
+    "express-request-id",
+    "express-winston",
     "fs",
     "path",
-    "child_process",
-    "tmp",
-    "aws-sdk",
     "sanitize-filename",
-    "express-request-id",
-    "dotenv"
-  ]
+    "tmp",
+    "winston",
+  ],
 };

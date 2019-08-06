@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "A backend API for transforming a Google Spreadsheet into JSON and storing the results in S3",
   "scripts": {
+    "prebuild": "tslint -p .",
     "build": "rollup -c rollup.config.js",
-    "predeploy": "docker build -f Dockerfile . -t bootlegger:dev"
+    "start": "nodemon -e ts -x ts-node src/index.ts",
+    "generatesecret": "./script/keygen.sh"
   },
   "repository": {
     "type": "git",
@@ -23,7 +25,9 @@
     "express": "^4.17.1",
     "express-request-id": "^1.4.1",
     "sanitize-filename": "^1.6.2",
-    "tmp": "^0.1.0"
+    "tmp": "^0.1.0",
+    "ts-node": "^8.3.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@types/aws-sdk": "^2.7.0",
@@ -33,10 +37,16 @@
     "@types/express-request-id": "^1.4.0",
     "@types/sanitize-filename": "^1.1.28",
     "@types/tmp": "^0.1.0",
+    "nodemon": "^1.19.1",
+    "prettier": "^1.18.2",
     "rollup": "^1.18.0",
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-uglify": "^6.0.2",
     "tslib": "^1.10.0",
-    "typescript": "^3.5.3"
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-react": "^4.0.0",
+    "typescript": "^3.5.3",
+    "typescript-tslint-plugin": "^0.5.4"
   }
 }

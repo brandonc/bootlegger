@@ -1,0 +1,19 @@
+{
+  "name": "bootlegger",
+  "version": "1.0.0",
+  "description": "A Google Sheets integration and pipeline for transforming sheets into json, uploaded to the ☁️",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brandonc/bootlegger.git"
+  },
+  "author": "Brandon Croft <brandon.croft@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brandonc/bootlegger/issues"
+  },
+  "homepage": "https://github.com/brandonc/bootlegger#readme"
+}

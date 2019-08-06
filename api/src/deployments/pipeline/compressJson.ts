@@ -1,9 +1,9 @@
-import fs from "fs";
 import { exec, ExecException } from "child_process";
+import fs from "fs";
 
-import { PipelineContext } from "./";
+import { IPipelineContext } from "./";
 
-function compressJson(context: PipelineContext) {
+function compressJson(context: IPipelineContext) {
   if (!context.output.jsonFiles) {
     return Promise.reject("No files to compress");
   }
@@ -17,7 +17,7 @@ function compressJson(context: PipelineContext) {
       (acc, filePath) => {
         return acc + fs.statSync(filePath).size;
       },
-      0
+      0,
     );
 
     exec(`gzip -9 ${args}`, (err: ExecException | null) => {
@@ -30,25 +30,25 @@ function compressJson(context: PipelineContext) {
         }
 
         context.output.jsonFilesCompressed = context.output.jsonFiles.map(
-          jsonFile => `${jsonFile}.gz`
+          jsonFile => `${jsonFile}.gz`,
         );
 
         const compressedFileSize = context.output.jsonFilesCompressed.reduce(
           (acc, filePath) => {
             return acc + fs.statSync(filePath).size;
           },
-          0
+          0,
         );
 
         context.output.putParams = {
+          ContentEncoding: "gzip",
           ContentType: "binary",
-          ContentEncoding: "gzip"
         };
 
         resolve(
           `Compressed ${
             context.output.jsonFiles.length
-          } file(s), saving ${jsonFileSize - compressedFileSize} bytes`
+          } file(s), saving ${jsonFileSize - compressedFileSize} bytes`,
         );
       }
     });

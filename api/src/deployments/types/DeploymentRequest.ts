@@ -1,12 +1,12 @@
-type DeploymentRequest = {
+interface IDeploymentRequest {
   environment: string;
   transform: string;
   spreadsheetUrl: string;
   spreadsheetName: string;
-};
-
-function fromJson(data: any) {
-  return data as DeploymentRequest;
 }
 
-export { DeploymentRequest as default, fromJson };
+function fromJson(data: any) {
+  return data as IDeploymentRequest;
+}
+
+export { IDeploymentRequest as default, fromJson };

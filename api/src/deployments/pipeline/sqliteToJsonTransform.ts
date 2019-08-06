@@ -1,8 +1,8 @@
-import { PipelineContext } from "./";
-import tmp from "tmp";
 import { exec, ExecException } from "child_process";
+import tmp from "tmp";
+import { IPipelineContext } from "./";
 
-function sqliteToJsonTransform(context: PipelineContext) {
+function sqliteToJsonTransform(context: IPipelineContext) {
   const { environment, transform } = context.request;
   const { dbPath } = context.output;
 
@@ -11,8 +11,8 @@ function sqliteToJsonTransform(context: PipelineContext) {
   }
 
   const jsonFile = tmp.tmpNameSync({
+    postfix: ".json",
     prefix: `${environment}-`,
-    postfix: ".json"
   });
 
   return new Promise<string>((resolve, reject) => {
@@ -25,7 +25,7 @@ function sqliteToJsonTransform(context: PipelineContext) {
           context.output.jsonFiles = [jsonFile];
           resolve(`Query transform output written to ${jsonFile}`);
         }
-      }
+      },
     );
   });
 }

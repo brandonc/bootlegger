@@ -1,9 +1,9 @@
+import { exec, ExecException } from "child_process";
+import fs from "fs";
 import path from "path";
 import tmp from "tmp";
-import fs from "fs";
-import { exec, ExecException } from "child_process";
 
-import { PipelineContext } from ".";
+import { IPipelineContext } from ".";
 
 const SECRET_PATH = path.resolve(__dirname, "secrets", "gs.json");
 
@@ -13,12 +13,12 @@ function ensureSecret(reject: (reason?: any) => void) {
   }
 }
 
-function sheetToSqlite(context: PipelineContext) {
+function sheetToSqlite(context: IPipelineContext) {
   const { spreadsheetName } = context.request;
 
   const sqliteFile = tmp.tmpNameSync({
+    postfix: ".sqlite",
     prefix: "gs-",
-    postfix: ".sqlite"
   });
   const cmd = `sqlitebiter -o "${sqliteFile}" gs ${SECRET_PATH} "${spreadsheetName}"`;
 

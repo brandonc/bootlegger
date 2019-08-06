@@ -1,3 +1,4 @@
 dist
 node_modules
-secrets
+secrets/gs.json
+secrets/vars
