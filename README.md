@@ -50,7 +50,7 @@ In order for your published spreadsheets to be readable by the backend, they mus
 
 Open the `Add-Ons > Publish via Bootlegger > Configure` action and type in the host URL for the backend as well as the secret you established during setup.
 
-## Server (bootlegger-api)
+## Server
 
 A node (express) API server that downloads and transforms a Google Spreadsheet, uploading the resulting JSON documents to S3.
 
