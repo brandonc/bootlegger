@@ -1,5 +1,7 @@
-import { exec, ExecException } from "child_process";
+import { spawn } from "child_process";
+import fs from "fs";
 import tmp from "tmp";
+
 import { IPipelineContext } from "./";
 
 function sqliteToJsonTransform(context: IPipelineContext) {
@@ -16,17 +18,25 @@ function sqliteToJsonTransform(context: IPipelineContext) {
   });
 
   return new Promise<string>((resolve, reject) => {
-    exec(
-      `sqlite3 ${dbPath} "${transform}" > ${jsonFile}`,
-      (err: ExecException | null) => {
-        if (err !== null) {
-          reject(err);
-        } else {
-          context.output.jsonFiles = [jsonFile];
-          resolve(`Query transform output written to ${jsonFile}`);
-        }
-      },
-    );
+    const sqlite = spawn("sqlite3", [dbPath, transform]);
+    const jq = spawn("jq", ["-cse", "."]);
+
+    sqlite.stderr.on("data", error => {
+      reject(("sqlite3 failed: " + error).trimEnd());
+    });
+
+    sqlite.stdout.pipe(jq.stdin);
+
+    jq.stdout.pipe(fs.createWriteStream(jsonFile, { flags: "w" }));
+
+    jq.on("close", (code: number) => {
+      if (code !== 0) {
+        reject(`jq failed with code ${code}`);
+      } else {
+        context.output.jsonFiles = [jsonFile];
+        resolve(`Transform succeeded, outut written to ${jsonFile}`);
+      }
+    });
   });
 }
 

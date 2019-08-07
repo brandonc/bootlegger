@@ -1,4 +1,4 @@
-import { exec, ExecException } from "child_process";
+import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
 import tmp from "tmp";
@@ -20,18 +20,31 @@ function sheetToSqlite(context: IPipelineContext) {
     postfix: ".sqlite",
     prefix: "gs-",
   });
-  const cmd = `sqlitebiter -o "${sqliteFile}" gs ${SECRET_PATH} "${spreadsheetName}"`;
-
   return new Promise<string>((resolve, reject) => {
     ensureSecret(reject);
-    return exec(cmd, (err: ExecException | null, _: string, stderr: string) => {
-      if (err !== null) {
-        reject(err);
-      } else {
-        context.output.dbPath = sqliteFile;
+    const sqlitebiter = spawn("sqlitebiter", [
+      "-o",
+      sqliteFile,
+      "gs",
+      SECRET_PATH,
+      spreadsheetName,
+    ]);
 
-        // For some reason sqlitebiter outputs to stderr
-        resolve(stderr);
+    let output = "";
+    sqlitebiter.stdout.on("data", (data: string) => {
+      output = output + data;
+    });
+
+    sqlitebiter.stderr.on("data", (data: string) => {
+      output = output + data;
+    });
+
+    sqlitebiter.on("exit", (code: number | null) => {
+      if (code === 0) {
+        context.output.dbPath = sqliteFile;
+        resolve(output);
+      } else {
+        reject(output);
       }
     });
   });

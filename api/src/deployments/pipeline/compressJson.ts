@@ -1,18 +1,14 @@
-import { exec, ExecException } from "child_process";
+import { spawn } from "child_process";
 import fs from "fs";
 
 import { IPipelineContext } from "./";
 
 function compressJson(context: IPipelineContext) {
-  if (!context.output.jsonFiles) {
-    return Promise.reject("No files to compress");
-  }
-
-  const args = context.output.jsonFiles
-    .map((file: string) => `"${file}"`)
-    .join(" ");
-
   return new Promise<string>((resolve, reject) => {
+    if (!context.output.jsonFiles) {
+      return reject("No files to compress");
+    }
+
     const jsonFileSize = (context.output.jsonFiles || []).reduce(
       (acc, filePath) => {
         return acc + fs.statSync(filePath).size;
@@ -20,12 +16,16 @@ function compressJson(context: IPipelineContext) {
       0,
     );
 
-    exec(`gzip -9 ${args}`, (err: ExecException | null) => {
-      if (err !== null) {
-        reject(err);
+    const gzip = spawn("gzip", ["-9", ...context.output.jsonFiles]);
+
+    gzip.on("exit", (code: number | null) => {
+      if (code !== 0) {
+        reject(`gzip failed with code ${code}`);
       } else {
         if (!context.output.jsonFiles) {
-          reject("No files to compress");
+          reject(
+            "Somehow the output files to compress disappeared. This should never happen.",
+          );
           return;
         }
 

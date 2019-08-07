@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y \
     python \
     python-pip \
     sqlite \
+    jq \
 && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pyasn1-modules
