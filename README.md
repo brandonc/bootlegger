@@ -6,7 +6,7 @@
 
 ## Overview
 
-bootlegger is a Google Spreadsheets toolchain that can transform a Google Spreadsheet into a set of JSON file(s) and upload them to S3-compatible cloud storage. It is composed of two parts:
+bootlegger is a Google Sheets toolchain that can transform a Google Spreadsheet into a set of JSON file(s) and upload them to S3-compatible cloud storage. It is composed of two parts:
 
 1. A Google Apps script that is meant to run on a spreadsheet duplicated from [this template](https://docs.google.com/spreadsheets/d/1TOHNH2mR0RovUyoUx081WSgwqLTDNV24syjSGeR5VG0/edit#gid=0). The spreadsheet acts as a controller that can publish any number of spreadsheets that it links to. See the [section below](#sheets-script-ui) for setup instructions
 
@@ -52,7 +52,7 @@ Open the `Add-Ons > Publish via Bootlegger > Configure` action and type in the h
 
 ## Server
 
-A node (express) API server that downloads and transforms a Google Spreadsheet, uploading the resulting JSON documents to S3.
+A node (express) API server that downloads and transforms a Google spreadsheet, uploading the resulting JSON documents to S3.
 
 ## Installation (Digital Ocean + Docker)
 
@@ -79,6 +79,8 @@ This process takes a few minutes while the new droplet downloads the base image,
 **Creating a Google Service Account**
 
 Follow [these instructions](https://support.google.com/a/answer/7378726?hl=en) to create a service account, ensuring that you choose "JSON" as the key type. Select "Project" > "Viewer" as the Role.
+
+Within your Google API Project, you should also enable the Google Drive API and Google Sheets API here: https://console.developers.google.com/apis
 
 **Create the required secrets locally and copy them to your server**
 

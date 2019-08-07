@@ -58,7 +58,8 @@ function publishAsJson(name: string, environment: string) {
       spreadsheetName: values[0],
       spreadsheetUrl: values[1],
       environment,
-      transform: values[2]
+      transform: values[2],
+      apiSecret: config.apiSecret
     }
   };
 
