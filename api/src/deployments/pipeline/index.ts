@@ -55,14 +55,17 @@ async function pipeline(requestId: string, deployment: IDeploymentRequest) {
 
   try {
     logger.info(
-      `[${requestId}] Beginning pipeline for ${deployment.spreadsheetName} (${deployment.environment})...`,
+      `[${new Date().toISOString()}][${requestId}] Beginning pipeline for ${
+        deployment.spreadsheetName
+      } (${deployment.environment})...`,
     );
     for (const item of PIPELINE) {
-      logger.info(`[${requestId}] ${await item(context)}`);
+      const logOutput = await item(context);
+      logger.info(`[${new Date().toISOString()}][${requestId}] ${logOutput}`);
     }
   } catch (e) {
     logger.error(
-      `[${requestId}] An error occurred (500 will be returned): ${e}`,
+      `[${new Date().toISOString()}][${requestId}] An error occurred (500 will be returned): ${e}`,
     );
     throw e;
   } finally {
