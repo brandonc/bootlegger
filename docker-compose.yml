@@ -28,8 +28,9 @@ services:
 
   faktory:
     ports:
-      - "7419:7419"
       - "7420:7420"
+    expose:
+      - "7419"
     volumes:
       - ./tmp/faktory-data:/var/lib/faktory
     image: contribsys/faktory:latest
