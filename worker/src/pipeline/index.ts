@@ -4,7 +4,7 @@ import sanitizeFilename from "sanitize-filename";
 
 import IDeploymentRequest from "../types/DeploymentRequest";
 
-import logger from "../../logger";
+import logger from "../logger";
 import compressJson from "./compressJson";
 import sheetToSqlite from "./sheetToSqlite";
 import sqliteToJsonTransform from "./sqliteToJsonTransform";
@@ -41,7 +41,9 @@ const PIPELINE: PipelineMethod[] = [
   writeManifest,
 ];
 
-async function pipeline(requestId: string, deployment: IDeploymentRequest) {
+async function pipeline(deployment: IDeploymentRequest) {
+  const { requestId } = deployment;
+
   const context: IPipelineContext = {
     id: requestId,
     output: {
@@ -57,18 +59,14 @@ async function pipeline(requestId: string, deployment: IDeploymentRequest) {
 
   try {
     logger.info(
-      `[${new Date().toISOString()}][${requestId}] Beginning pipeline for ${
-        deployment.spreadsheetName
-      } (${deployment.environment})...`,
+      `[${requestId}] Beginning pipeline for ${deployment.spreadsheetName} (${deployment.environment})...`,
     );
     for (const item of PIPELINE) {
       const logOutput = await item(context);
-      logger.info(`[${new Date().toISOString()}][${requestId}] ${logOutput}`);
+      logger.info(`[${requestId}] ${logOutput}`);
     }
   } catch (e) {
-    logger.error(
-      `[${new Date().toISOString()}][${requestId}] An error occurred (500 will be returned): ${e}`,
-    );
+    logger.error(`[${requestId}] An error occurred: ${e}`);
     throw e;
   } finally {
     const filesToCleanup = [

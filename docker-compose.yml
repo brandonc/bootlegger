@@ -1,0 +1,37 @@
+version: "3"
+services:
+  api:
+    build: "api/."
+    ports:
+      - "80:3000"
+    environment:
+      - API_SECRET
+      - FAKTORY_URL=tcp://:${FAKTORY_PASSWORD}@faktory:7419
+      - NODE_ENV=development
+    depends_on:
+      - worker
+      - faktory
+
+  worker:
+    build: "worker/."
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - S3_BUCKET_NAME
+      - S3_ENDPOINT
+      - FAKTORY_URL=tcp://:${FAKTORY_PASSWORD}@faktory:7419
+      - NODE_ENV=development
+    volumes:
+      - ./secrets:/app/secrets
+    depends_on:
+      - faktory
+
+  faktory:
+    ports:
+      - "7419:7419"
+      - "7420:7420"
+    volumes:
+      - ./tmp/faktory-data:/var/lib/faktory
+    image: contribsys/faktory:latest
+    environment:
+      - FAKTORY_PASSWORD

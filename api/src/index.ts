@@ -1,9 +1,3 @@
-import dotenv from "dotenv";
-import path from "path";
-
-// Load secrets environment variables
-dotenv.config({ path: path.resolve(__dirname, "secrets", "vars") });
-
 import bodyParser from "body-parser";
 import express, { Response } from "express";
 import addRequestId from "express-request-id";

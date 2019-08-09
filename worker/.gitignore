@@ -1,0 +1,4 @@
+dist
+node_modules
+secrets/gs.json
+secrets/vars

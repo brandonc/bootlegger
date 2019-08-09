@@ -1,2 +1,5 @@
 .DS_Store
 .env
+tmp/
+secrets/gs.json
+node_modules

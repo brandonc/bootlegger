@@ -62,19 +62,17 @@ The easiest way to deploy the API server is using docker on a cloud provider suc
 
 Uses [docker machine](https://docs.docker.com/machine/) to provision a docker host on digitalocean.
 
-`docker-machine create --driver digitalocean --digitalocean-access-token <ACCESS TOKEN> bootlegger-api`
+`docker-machine create --driver digitalocean --digitalocean-access-token <ACCESS TOKEN> --digitalocean-size s-2vcpu-2gb bootlegger-cluster`
 
 **Configure your shell to use the docker host**
 
-`eval $(docker-machine env bootlegger-api)`
+`eval $(docker-machine env bootlegger-cluster)`
 
 This only works for the current terminal session. To always use this docker host, add this command to your bash profile.
 
-**Build the API server and install its dependencies**
+**SSH into your droplet**
 
-`docker build -f Dockerfile . -t bootlegger:api`
-
-This process takes a few minutes while the new droplet downloads the base image, builds the bootlegger package, and installs the system dependencies (sqlite, python, and sqlitebiter)
+`docker-machine ssh bootlegger-cluster`
 
 **Creating a Google Service Account**
 
@@ -84,29 +82,19 @@ Within your Google API Project, you should also enable the Google Drive API and 
 
 **Create the required secrets locally and copy them to your server**
 
-`npm run generatesecret`
-
 Move the json file created with the service account to the file `secrets/gs.json`
 
-Open the new file called `secrets/vars` and add the following contents. This file will be added to the docker container's ENV.
+Copy the file `.env.template` to `.env` and fill in all the values. This file will be added to the docker container's ENV via docker compose
 
-```
-AWS_ACCESS_KEY_ID=<access key id>
-AWS_SECRET_ACCESS_KEY=<secret access key>
-S3_BUCKET_NAME=<s3 bucket name>
-S3_ENDPOINT=<s3 endpoint, example: "sfo2.digitaloceanspaces.com">
-```
+From the root directory, run `npm run generatesecret` to create a new API shared secret and follow the instructions given.
 
-Securely copy the secrets to your droplet into a folder called /srv/bootlegger:
+Securely copy the secrets to your droplet into a folder called /app/secrets:
 
-`ssh -i ~/.docker/machine/machines/bootlegger-api/id_rsa root@<ip> 'mkdir -p /srv/bootlegger/secrets'`
-`scp -i ~/.docker/machine/machines/bootlegger-api/id_rsa -r ./secrets/* root@<ip>:/srv/bootlegger/secrets/`
+`scp -i ~/.docker/machine/machines/bootlegger-cluster/id_rsa -r ./secrets/gs.json root@<ip>:/var/lib/bootlegger/secrets/`
 
-**Run the container**
+**Builds, creates, and starts the containers**
 
-This also maps port 3000 to host port 80, sets a restart policy, and mounts the secrets folder as a volume:
-
-`docker run -v "/srv/bootlegger/secrets:/app/secrets" -p 80:3000 --restart=always -d bootlegger:api`
+Use `docker-compose -f docker-compose.yml -f production.yml up -d` to create and run all services
 
 **Try it out!**
 
@@ -116,16 +104,14 @@ You should see "OK" if the server is running
 
 ## Development
 
-bootlegger-api requires a few local system dependencies before it will work:
+bootlegger requires a few local system dependencies before it will work:
 
 1. python 3.6 (and pip)
 
-2. sqlite
+2. sqlite (`brew install sqlite` or `apt-get install sqlite`)
 
-`brew install sqlite` or `apt-get install sqlite`
+3. faktory ([installation](https://github.com/contribsys/faktory/wiki/Installation))
 
-3. sqlitebiter w/ google sheets extensions:
-
-`pip install sqlitebiter[gs]`
+4. sqlitebiter w/ google sheets extensions: (`pip install sqlitebiter[gs]`)
 
 Once your dependencies are installed, just `npm install` and `npm start` to get started

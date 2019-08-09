@@ -1,7 +1,8 @@
 {
-  "name": "bootlegger-api",
+  "name": "bootlegger-worker",
   "version": "1.0.0",
-  "description": "A backend API for transforming a Google Spreadsheet into JSON and storing the results in S3",
+  "description": "A backend processor for transforming a Google Spreadsheet into JSON and storing the results in the ☁️",
+  "main": "index.js",
   "scripts": {
     "prebuild": "tslint -p .",
     "build": "rollup -c rollup.config.js",
@@ -11,32 +12,31 @@
     "type": "git",
     "url": "git+https://github.com/brandonc/bootlegger.git"
   },
-  "author": "Brandon Croft",
+  "author": "Brandon Croft <brandon.croft@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/brandonc/bootlegger/issues"
   },
   "homepage": "https://github.com/brandonc/bootlegger#readme",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "express-request-id": "^1.4.1",
+    "aws-sdk": "^2.506.0",
     "faktory-worker": "^3.0.3",
+    "sanitize-filename": "^1.6.2",
+    "tmp": "^0.1.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/body-parser": "^1.17.0",
-    "@types/express": "^4.17.0",
-    "@types/express-request-id": "^1.4.0",
+    "@types/sanitize-filename": "^1.1.28",
+    "@types/tmp": "^0.1.0",
     "nodemon": "^1.19.1",
     "prettier": "^1.18.2",
-    "rollup": "^1.18.0",
+    "rollup": "^1.19.4",
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-uglify": "^6.0.2",
+    "ts-node": "^8.3.0",
     "tslib": "^1.10.0",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
-    "ts-node": "^8.3.0",
     "typescript": "^3.5.3",
     "typescript-tslint-plugin": "^0.5.4"
   }

@@ -1,0 +1,23 @@
+version: "3"
+services:
+  api:
+    environment:
+      - NODE_ENV=production
+    restart: always
+
+  worker:
+    restart: always
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - /var/lib/bootlegger/secrets:/app/secrets
+    depends_on:
+      - faktory
+
+  faktory:
+    ports:
+      - "7420:7420"
+    volumes:
+      - /var/lib/faktory:/var/lib/faktory
+    image: contribsys/faktory:latest
+    restart: always

@@ -4,7 +4,11 @@
   "description": "A Google Sheets integration and pipeline for transforming sheets into json, uploaded to the ☁️",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm-run-all --parallel dev:*",
+    "dev:api": "cd api && npm run start",
+    "dev:worker": "cd worker && npm run start",
+    "dev:faktory": "faktory || echo \"Faktory not found. Use 'brew install contribsys/faktory/faktory' to install locally.\"",
+    "generatesecret": "./script/keygen.sh"
   },
   "repository": {
     "type": "git",
@@ -15,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/brandonc/bootlegger/issues"
   },
-  "homepage": "https://github.com/brandonc/bootlegger#readme"
+  "homepage": "https://github.com/brandonc/bootlegger#readme",
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
+  }
 }

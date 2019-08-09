@@ -1,9 +1,18 @@
 import { Request, Response, Router } from "express";
 
-import pipeline, { IPipelineResult } from "../pipeline";
-import { fromJson } from "../types/DeploymentRequest";
+import logger from "../../logger";
+import IDeploymentRequest, { fromJson } from "../types/DeploymentRequest";
 
 const router = Router();
+
+// tslint:disable-next-line
+const faktory = require("faktory-worker");
+
+const enqueue = async (request: IDeploymentRequest) => {
+  const client = await faktory.connect();
+  await client.job("PipelineBegin", request).push();
+  await client.close();
+};
 
 router.post("/", (req: Request, res: Response) => {
   // @ts-ignore added by middleware
@@ -14,13 +23,17 @@ router.post("/", (req: Request, res: Response) => {
     return;
   }
 
-  pipeline(requestId, fromJson(req.body))
-    .then((result: IPipelineResult) => {
-      res.status(201).send({ manifest: result.manifestFilename });
+  enqueue(fromJson(requestId, req.body))
+    .then(() => {
+      logger.info(`Enqueued ${requestId}`);
+
+      res.status(201).send({ deploymentId: requestId });
     })
-    .catch(e => {
-      res.status(500).send({ error: e });
-    });
+    .catch(reason =>
+      res.status(500).send({
+        error: `Could not contact job server. The error returned was ${reason}`,
+      }),
+    );
 });
 
 export { router as default };

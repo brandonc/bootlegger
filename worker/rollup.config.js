@@ -9,12 +9,12 @@ export default {
     format: "cjs",
   },
   external: [
-    "body-parser",
-    "express",
-    "express-request-id",
-    "express-winston",
+    "aws-sdk",
+    "child_process",
     "fs",
     "path",
+    "sanitize-filename",
+    "tmp",
     "winston",
   ],
 };

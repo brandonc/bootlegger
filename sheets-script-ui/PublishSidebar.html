@@ -36,9 +36,7 @@
             </button>
           </div>
         </div>
-        <div class="block" id="resultsContainer" style="display: none;">
-          <p id="resultsStatus"></p>
-        </div>
+        <div class="block" id="resultsContainer" style="display: none;" />
       </form>
       <div id="error" class="block" style="display: none;"></div>
     </div>
@@ -56,7 +54,7 @@
           e.preventDefault();
 
           $("#publishBtn").attr("disabled", true);
-          $("#resultsStatus").html("Publishing... This may take a moment.");
+          $("#resultsContainer").html("<p>Publishing... This may take a moment.</p>");
           $("#resultsContainer").show();
 
           google.script.run
@@ -93,8 +91,10 @@
         var list = $("#results");
         list.empty();
 
-        $("#resultsStatus").html(
-          `Done! (The manifest is called ${result.manifest})`
+        $("#resultsContainer").html(
+          `<p>Publishing has begun. It may take up to a minute depending on the size of your spreadsheet.</p><p>In case anything goes wrong, this deployment is known as <code>${
+            result.deploymentId
+          }</code></p>`
         );
       }
     </script>
