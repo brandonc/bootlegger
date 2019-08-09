@@ -8,9 +8,9 @@
 
 bootlegger is a Google Sheets toolchain that can transform a Google Spreadsheet into a set of JSON file(s) and upload them to S3-compatible cloud storage. It is composed of two parts:
 
-1. A Google Apps script that is meant to run on a spreadsheet duplicated from [this template](https://docs.google.com/spreadsheets/d/1TOHNH2mR0RovUyoUx081WSgwqLTDNV24syjSGeR5VG0/edit#gid=0). The spreadsheet acts as a controller that can publish any number of spreadsheets that it links to. See the [section below](#sheets-script-ui) for setup instructions
+1. A Google Apps script that is meant to run on a spreadsheet duplicated from [this template](https://docs.google.com/spreadsheets/d/1TOHNH2mR0RovUyoUx081WSgwqLTDNV24syjSGeR5VG0/edit#gid=0). The spreadsheet acts as a controller that can publish any number of spreadsheets that it links to. See the [section below](#sheets-script-ui Installation) for setup instructions
 
-2. An API server that the script communicates with to execute a transformation pipeline. The API server is configured with a Google service account that should be given access to the spreadsheets that it transforms. See the [section below](#server) for setup instructions
+2. An API server that the script communicates with to execute a transformation pipeline. The API server is configured with a Google service account that should be given access to the spreadsheets that it transforms. See the [section below](#api & worker Installation) for setup instructions
 
 ## Transformation
 
@@ -24,7 +24,7 @@ The spreadsheet transformation consists of two parts:
 
 Once the spreadsheet is converted into JSON file(s), those are compressed and uploaded to an S3 (compatible) cloud store along with a manifest that lists them. The manifest has the useful property of having a predictable name so that client applications can fetch it and follow links to the newest published data.
 
-## sheets-script-ui
+## sheets-script-ui Installation
 
 #### Installation
 
@@ -50,13 +50,13 @@ In order for your published spreadsheets to be readable by the backend, they mus
 
 Open the `Add-Ons > Publish via Bootlegger > Configure` action and type in the host URL for the backend as well as the secret you established during setup.
 
-## Server
+## api & worker Installation
 
-A node (express) API server that downloads and transforms a Google spreadsheet, uploading the resulting JSON documents to S3.
+A node (express) API server that queues a job and a node (faktory) worker that downloads and transforms a Google spreadsheet, uploading the resulting JSON documents to S3.
 
-## Installation (Digital Ocean + Docker)
+#### On Digital Ocean
 
-The easiest way to deploy the API server is using docker on a cloud provider such as digitalocean. In this example, we'll create a new droplet called bootlegger-api then build and run the API server on it. Make sure you have docker installed locally before beginning the installation and your working directory is the "api" folder where this README is found.
+The easiest way to deploy the cluster is using docker on a cloud provider such as digitalocean. In this example, we'll create a new droplet called bootlegger-cluster then build and run the containers on it. Make sure you have docker installed locally before beginning the installation and your working directory is the root folder where this README is found.
 
 **Create the docker host droplet**
 
@@ -84,7 +84,7 @@ Within your Google API Project, you should also enable the Google Drive API and 
 
 Move the json file created with the service account to the file `secrets/gs.json`
 
-Copy the file `.env.template` to `.env` and fill in all the values. This file will be added to the docker container's ENV via docker compose
+Copy the file `.env.template` to `.env` and fill in all the values. Make up something new for FAKTORY_PASSWORD. This file will be added to the docker container's ENV via docker compose.
 
 From the root directory, run `npm run generatesecret` to create a new API shared secret and follow the instructions given.
 
@@ -101,6 +101,12 @@ Use `docker-compose -f docker-compose.yml -f production.yml up -d` to create and
 `curl http://<ip>/health`
 
 You should see "OK" if the server is running
+
+## Troubleshooting
+
+You probably won't see errors when publishing, but well after the fact. To diagnose broken jobs, try going to the faktory dashboard: http://:FAKTORY_PASSWORD@<ip>:7420
+  
+You can also examine logs using `docker-compose logs -f`
 
 ## Development
 
