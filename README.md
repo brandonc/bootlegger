@@ -8,9 +8,9 @@
 
 bootlegger is a Google Sheets toolchain that can transform a Google Spreadsheet into a set of JSON file(s) and upload them to S3-compatible cloud storage. It is composed of two parts:
 
-1. A Google Apps script that is meant to run on a spreadsheet duplicated from [this template](https://docs.google.com/spreadsheets/d/1TOHNH2mR0RovUyoUx081WSgwqLTDNV24syjSGeR5VG0/edit#gid=0). The spreadsheet acts as a controller that can publish any number of spreadsheets that it links to. See the [section below](#sheets-script-ui Installation) for setup instructions
+1. A Google Apps script that is meant to run on a spreadsheet duplicated from [this template](https://docs.google.com/spreadsheets/d/1TOHNH2mR0RovUyoUx081WSgwqLTDNV24syjSGeR5VG0/edit#gid=0). The spreadsheet acts as a controller that can publish any number of spreadsheets that it links to. See the [section below](#sheets-script-ui-installation) for setup instructions
 
-2. An API server that the script communicates with to execute a transformation pipeline. The API server is configured with a Google service account that should be given access to the spreadsheets that it transforms. See the [section below](#api & worker Installation) for setup instructions
+2. An API server that the script communicates with to execute a transformation pipeline. The API server is configured with a Google service account that should be given access to the spreadsheets that it transforms. See the [section below](#api--worker-installation) for setup instructions
 
 ## Transformation
 
