@@ -13,7 +13,9 @@ import writeToS3 from "./writeToS3";
 
 interface IPipelineResult {
   dbPath?: string;
-  jsonFiles?: string[];
+  jsonFiles?: {
+    [id: string]: string;
+  };
   jsonFilesCompressed?: string[];
   putParams?: object;
   manifestFilename: string;
@@ -71,7 +73,7 @@ async function pipeline(requestId: string, deployment: IDeploymentRequest) {
   } finally {
     const filesToCleanup = [
       context.output.dbPath,
-      ...(context.output.jsonFiles || []),
+      ...(Object.values(context.output.jsonFiles || {}) || []),
       ...(context.output.jsonFilesCompressed || []),
     ];
 

@@ -66,21 +66,21 @@ function writeFileToS3(
 }
 
 function writeToS3(context: IPipelineContext) {
-  if (!context.output.jsonFiles || context.output.jsonFiles.length === 0) {
+  if (
+    !context.output.jsonFiles ||
+    Object.keys(context.output.jsonFiles).length === 0
+  ) {
     return Promise.reject("No files to upload");
   }
 
-  const innerPromises = (context.output.jsonFilesCompressed || []).map(
-    jsonFile => {
-      const key = `bootlegger-${context.id}/${path
-        .basename(jsonFile)
-        .replace(/\.gz$/, "")}`;
+  const innerPromises = Object.keys(context.output.jsonFiles || {}).map(id => {
+    const jsonFile = (context.output.jsonFiles || {})[id];
+    const key = `bootlegger-${context.id}/${path.basename(jsonFile)}`;
 
-      context.output.manifest.json = key;
+    context.output.manifest[id] = key;
 
-      return writeFileToS3(jsonFile, key, context.output.putParams);
-    },
-  );
+    return writeFileToS3(jsonFile + ".gz", key, context.output.putParams);
+  });
 
   return new Promise<string>((resolve, reject) => {
     Promise.all(innerPromises)

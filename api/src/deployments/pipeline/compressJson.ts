@@ -5,31 +5,33 @@ import { IPipelineContext } from "./";
 
 function compressJson(context: IPipelineContext) {
   return new Promise<string>((resolve, reject) => {
-    if (!context.output.jsonFiles) {
+    const jsonFiles = Object.values(context.output.jsonFiles || {});
+
+    if (jsonFiles.length === 0) {
       return reject("No files to compress");
     }
 
-    const jsonFileSize = (context.output.jsonFiles || []).reduce(
-      (acc, filePath) => {
-        return acc + fs.statSync(filePath).size;
-      },
-      0,
-    );
+    const jsonFileSize = jsonFiles.reduce((acc, filePath) => {
+      return acc + fs.statSync(filePath).size;
+    }, 0);
 
-    const gzip = spawn("gzip", ["-9", ...context.output.jsonFiles]);
+    // tslint:disable-next-line
+    console.log("gzipping " + jsonFiles.join(","));
+
+    const gzip = spawn("gzip", ["-9", ...jsonFiles]);
 
     gzip.on("exit", (code: number | null) => {
       if (code !== 0) {
         reject(`gzip failed with code ${code}`);
       } else {
-        if (!context.output.jsonFiles) {
+        if (jsonFiles.length === 0) {
           reject(
             "Somehow the output files to compress disappeared. This should never happen.",
           );
           return;
         }
 
-        context.output.jsonFilesCompressed = context.output.jsonFiles.map(
+        context.output.jsonFilesCompressed = jsonFiles.map(
           jsonFile => `${jsonFile}.gz`,
         );
 
@@ -46,9 +48,8 @@ function compressJson(context: IPipelineContext) {
         };
 
         resolve(
-          `Compressed ${
-            context.output.jsonFiles.length
-          } file(s), saving ${jsonFileSize - compressedFileSize} bytes`,
+          `Compressed ${jsonFiles.length} file(s), saving ${jsonFileSize -
+            compressedFileSize} bytes`,
         );
       }
     });

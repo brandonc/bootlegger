@@ -1,7 +1,7 @@
 function rowlookup(
   search: string,
   range: GoogleAppsScript.Spreadsheet.Range
-): string[] | null {
+): string[][] | null {
   const finder = range.createTextFinder(search);
   const found = finder.findAll();
 
@@ -9,15 +9,13 @@ function rowlookup(
     return null;
   }
 
-  const firstMatch = found[0];
+  return found.map((match: GoogleAppsScript.Spreadsheet.Range) => {
+    const foundRange = range
+      .getSheet()
+      .getRange("A" + String(match.getRow()) + ":D" + String(match.getRow()));
 
-  const foundRange = range
-    .getSheet()
-    .getRange(
-      "A" + String(firstMatch.getRow()) + ":D" + String(firstMatch.getRow())
-    );
-
-  return foundRange.getDisplayValues()[0];
+    return foundRange.getDisplayValues()[0];
+  });
 }
 
 function listSpreadsheets() {
@@ -31,7 +29,9 @@ function listSpreadsheets() {
   const displayValues = nameRange.getDisplayValues();
   for (let i = 0; i < nameRange.getNumRows(); i++) {
     if (displayValues[i][0] === "") break;
-    sheets.push(displayValues[i][0]);
+    if (sheets.indexOf(displayValues[i][0]) < 0) {
+      sheets.push(displayValues[i][0]);
+    }
   }
 
   return sheets;
@@ -44,9 +44,9 @@ function publishAsJson(name: string, environment: string) {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = spreadsheet.getSheets()[0];
 
-  const values = rowlookup(name, sheet.getDataRange());
+  const rows = rowlookup(name, sheet.getDataRange());
 
-  if (values === null) {
+  if (rows === null) {
     throw Error(`Could not find a record named \"${name}\"`);
   }
 
@@ -55,10 +55,12 @@ function publishAsJson(name: string, environment: string) {
   const options = {
     method: "post" as "post",
     payload: {
-      spreadsheetName: values[0],
-      spreadsheetUrl: values[1],
+      spreadsheetName: rows[0][0],
+      spreadsheetUrl: rows[0][1],
       environment,
-      transform: values[2],
+      transformsJson: JSON.stringify(
+        rows.map(row => ({ id: row[2], transform: row[3] }))
+      ),
       apiSecret: config.apiSecret
     }
   };
