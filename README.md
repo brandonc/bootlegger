@@ -34,7 +34,7 @@ Bind the script to a Google Spreadsheet that is copied from [this template](http
 
 `npx clasp create --parentId <id> --title "Publish via Bootlegger"`
 
-The <id> can be found in the spreadsheet URL of your copy: `https://docs.google.com/spreadsheets/d/<id>/edit`
+The `<id>` can be found in the spreadsheet URL of your copy: `https://docs.google.com/spreadsheets/d/<id>/edit`
 
 Now push the scripts to the script container:
 
@@ -104,7 +104,7 @@ You should see "OK" if the server is running
 
 ## Troubleshooting
 
-You probably won't see errors when publishing, but well after the fact. To diagnose broken jobs, try going to the faktory dashboard: http://:FAKTORY_PASSWORD@<ip>:7420
+You probably won't see errors when publishing, but well after the fact. To diagnose broken jobs, try going to the faktory dashboard: `http://:<FAKTORY_PASSWORD>@<ip>:7420`
   
 You can also examine logs using `docker-compose logs -f`
 
