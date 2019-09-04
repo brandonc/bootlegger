@@ -15,6 +15,7 @@ function writeManifest(context: IPipelineContext) {
   });
 
   return writeFileToS3(`${manifestPath}`, context.output.manifestFilename, {
+    CacheControl: "max-age=60",
     ContentType: "application/json",
   });
 }

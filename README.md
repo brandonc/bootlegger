@@ -90,7 +90,7 @@ From the root directory, run `npm run generatesecret` to create a new API shared
 
 Securely copy the secrets to your droplet into a folder called /app/secrets:
 
-`scp -i ~/.docker/machine/machines/bootlegger-cluster/id_rsa -r ./secrets/gs.json root@<ip>:/var/lib/bootlegger/secrets/`
+`scp -i ~/.docker/machine/machines/bootlegger-cluster/id_rsa -r ./secrets/gs.json root@<ip>:/app/secrets/`
 
 **Builds, creates, and starts the containers**
 
@@ -105,7 +105,7 @@ You should see "OK" if the server is running
 ## Troubleshooting
 
 You probably won't see errors when publishing, but well after the fact. To diagnose broken jobs, try going to the faktory dashboard: `http://:<FAKTORY_PASSWORD>@<ip>:7420`
-  
+
 You can also examine logs using `docker-compose logs -f`
 
 ## Development

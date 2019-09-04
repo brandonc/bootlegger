@@ -1,6 +1,6 @@
 .DS_Store
 .env
+.env.brandonc
 tmp/
 secrets/gs.json
-node_modules
-.env.production
+node_modules.env.production

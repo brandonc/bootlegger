@@ -22,7 +22,7 @@ services:
       - FAKTORY_URL=tcp://:${FAKTORY_PASSWORD}@faktory:7419
       - NODE_ENV=development
     volumes:
-      - ./secrets:/app/secrets
+      - /var/lib/bootlegger/secrets:/app/secrets
     depends_on:
       - faktory
 
