@@ -1,6 +1,6 @@
 <p align="center">
   A Google Sheets integration and API server that transforms a spreadsheet into JSON and uploads it to the ☁️</p>
-<p align="center"><img src="https://brandoncroftcom.sfo2.cdn.digitaloceanspaces.com/SS_Banshee.jpg" width="400" /></p>
+<p align="center"><img src="https://roosterhappyhours.sfo2.cdn.digitaloceanspaces.com/SS_Banshee.jpg" width="400" /></p>
 
 ---
 
