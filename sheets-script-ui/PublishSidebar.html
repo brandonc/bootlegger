@@ -28,6 +28,7 @@
             <label for="environment">Environment</label>
             <select name="environment" id="environment">
               <option value="production">Production</option>
+              <option value="staging">Staging</option>
             </select>
           </div>
           <div class="block">
@@ -54,7 +55,9 @@
           e.preventDefault();
 
           $("#publishBtn").attr("disabled", true);
-          $("#resultsContainer").html("<p>Publishing... This may take a moment.</p>");
+          $("#resultsContainer").html(
+            "<p>Publishing... This may take a moment.</p>"
+          );
           $("#resultsContainer").show();
 
           google.script.run
@@ -92,9 +95,7 @@
         list.empty();
 
         $("#resultsContainer").html(
-          `<p>Publishing has begun. It may take up to a minute depending on the size of your spreadsheet.</p><p>In case anything goes wrong, this deployment is known as <code>${
-            result.deploymentId
-          }</code></p>`
+          `<p>Publishing has begun. It may take up to a minute depending on the size of your spreadsheet.</p><p>In case anything goes wrong, this deployment is known as <code>${result.deploymentId}</code></p>`
         );
       }
     </script>
