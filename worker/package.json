@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/brandonc/bootlegger#readme",
   "dependencies": {
-    "aws-sdk": "^2.506.0",
+    "aws-sdk": "^2.814.0",
     "faktory-worker": "^3.0.3",
     "sanitize-filename": "^1.6.2",
     "tmp": "^0.1.0",
